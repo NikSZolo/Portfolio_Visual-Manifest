@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Visual Manifest</title>
   <style>
     * {
@@ -19,21 +19,20 @@
       overflow-x: hidden;
     }
 
-    .top-bar, .bottom-bar {
+    .black-bar {
       position: fixed;
-      left: 0;
       width: 100%;
-      height: 0;
+      height: 10vh;
       background: #000;
-      z-index: 100;
+      z-index: 1000;
+      left: 0;
       pointer-events: none;
     }
 
-    .top-bar {
+    .black-bar.top {
       top: 0;
     }
-
-    .bottom-bar {
+    .black-bar.bottom {
       bottom: 0;
     }
 
@@ -44,7 +43,7 @@
       justify-content: center;
       align-items: center;
       position: relative;
-      z-index: 1;
+      z-index: 10;
     }
 
     .title {
@@ -55,6 +54,7 @@
       transition: all 0.3s ease;
       z-index: 200;
       position: relative;
+      transform-origin: left top;
     }
 
     .scroll-hint {
@@ -75,17 +75,26 @@
     }
 
     .scroll-container {
-      height: 200vh;
-      background-color: #f8f8f8;
-      position: relative;
-      z-index: 0;
+      height: 200vh; /* reicht fürs Scrollen */
+      background: #f8f8f8;
+      padding-top: 20vh;
+    }
+
+    .dummy-content {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #aaa;
+      font-size: 2rem;
     }
   </style>
 </head>
 <body>
-  <!-- Cinemascope Bars -->
-  <div class="top-bar"></div>
-  <div class="bottom-bar"></div>
+
+  <!-- Schwarze Balken -->
+  <div class="black-bar top"></div>
+  <div class="black-bar bottom"></div>
 
   <!-- Landing Page -->
   <section class="landing">
@@ -93,52 +102,47 @@
     <div class="scroll-hint">Scroll to explore ↓</div>
   </section>
 
-  <!-- Scroll Content -->
+  <!-- Scrollbereich -->
   <section class="scroll-container">
-    <!-- Hier kommen später deine Frames -->
+    <div class="dummy-content">Hier kommen später die Frames rein...</div>
   </section>
 
-  <!-- GSAP + ScrollTrigger -->
+  <!-- GSAP -->
   <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
 
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    // 🎞️ Top & Bottom Balken einblenden
-    gsap.to(".top-bar", {
-      height: "6vh",
-      scrollTrigger: {
-        trigger: ".scroll-container",
-        start: "top bottom",
-        end: "top center",
-        scrub: true
-      }
-    });
+    let title = document.querySelector(".title");
 
-    gsap.to(".bottom-bar", {
-      height: "6vh",
-      scrollTrigger: {
-        trigger: ".scroll-container",
-        start: "top bottom",
-        end: "top center",
-        scrub: true
+    ScrollTrigger.create({
+      trigger: ".scroll-container",
+      start: "top bottom",
+      end: "top 25%",
+      scrub: true,
+      onUpdate: self => {
+        let progress = self.progress;
+        if (progress >= 1) {
+          // Endposition im Balken
+          title.style.position = "fixed";
+          title.style.top = "1.5vh";
+          title.style.left = "2vw";
+          title.style.transform = "scale(0.5)";
+          title.style.color = "#fff";
+          title.style.zIndex = "999";
+        } else {
+          // Startposition
+          title.style.position = "relative";
+          title.style.top = "0";
+          title.style.left = "0";
+          title.style.transform = "scale(1)";
+          title.style.color = "#111";
+          title.style.zIndex = "200";
+        }
       }
-    });
-
-    // ✨ Titel wird kleiner, weiß & wandert in den oberen Balken
-    gsap.to(".title", {
-      scrollTrigger: {
-        trigger: ".scroll-container",
-        start: "top bottom",
-        end: "top center",
-        scrub: true
-      },
-      scale: 0.5,
-      y: "-40vh",
-      color: "#fff",
-      ease: "power2.out"
     });
   </script>
+
 </body>
 </html>
