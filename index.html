@@ -44,74 +44,81 @@
     }
 
     @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(10px); }
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(10px);
+      }
     }
 
     .scroll-container {
-      height: 1000vh;
+      height: 300vh; /* genug Platz zum Scrollen */
+      background: #f0f0f0;
       position: relative;
     }
 
-    .sticky-section {
-      position: sticky;
+    .film-bars {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 0;
+      background: black;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .top-bar {
       top: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
     }
 
-    .frame-holder {
-      position: absolute;
-      width: 60%;
-      height: auto;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .frame-holder img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border: 2px solid #111;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    .bottom-bar {
+      bottom: 0;
     }
   </style>
 </head>
 <body>
+  <!-- 🎥 Cinemascope-Balken -->
+  <div class="film-bars top-bar"></div>
+  <div class="film-bars bottom-bar"></div>
+
+  <!-- 🚀 Landing Page -->
   <section class="landing">
     <h1 class="title">Visual Manifest</h1>
     <div class="scroll-hint">Scroll to explore ↓</div>
   </section>
 
+  <!-- 🖼️ Scrollbereich -->
   <section class="scroll-container">
-  <div class="sticky-section">
-    <div class="frame-holder"><img src="images/frame1.jpg" alt="Frame 1" /></div>
-    <div class="frame-holder"><img src="images/frame2.jpg" alt="Frame 2" /></div>
-    <div class="frame-holder"><img src="images/frame3.jpg" alt="Frame 3" /></div>
-    <div class="frame-holder"><img src="images/frame4.jpg" alt="Frame 4" /></div>
-  </div>
-</section>
+    <!-- Hier kann später z. B. die Frame-Animation rein -->
+  </section>
 
+  <!-- 💫 GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    const frames = gsap.utils.toArray(".frame-holder");
+    // 🎞️ Balken oben
+    gsap.to(".top-bar", {
+      height: "6vh",
+      scrollTrigger: {
+        trigger: ".scroll-container",
+        start: "top bottom",
+        end: "top center",
+        scrub: true
+      }
+    });
 
-    frames.forEach((frame, index) => {
-      gsap.to(frame, {
-        opacity: 1,
-        scrollTrigger: {
-          trigger: ".scroll-container",
-          start: () => "top+=" + (window.innerHeight * index) + " top",
-          end: () => "top+=" + (window.innerHeight * (index + 1)) + " top",
-          scrub: true
-        }
-      });
+    // 🎞️ Balken unten
+    gsap.to(".bottom-bar", {
+      height: "6vh",
+      scrollTrigger: {
+        trigger: ".scroll-container",
+        start: "top bottom",
+        end: "top center",
+        scrub: true
+      }
     });
   </script>
 </body>
