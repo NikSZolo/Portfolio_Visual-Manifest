@@ -10,7 +10,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     html, body {
       height: 100%;
       width: 100%;
@@ -45,83 +44,75 @@
     }
 
     @keyframes bounce {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(10px);
-      }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
     }
 
-    .frames-container {
+    .scroll-container {
+      height: 300vh;
       position: relative;
-      height: 200vh;
-      padding-top: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
-    .frame {
-      position: absolute;
+    .sticky-section {
+      position: sticky;
       top: 0;
-      width: 60vw;
-      max-width: 700px;
-      transform-origin: center;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease;
-      cursor: pointer;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
 
-    .frame img {
+    .frame-holder {
+      position: absolute;
+      width: 60%;
+      height: auto;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .frame-holder img {
       width: 100%;
+      height: auto;
       display: block;
-      border-radius: 12px;
+      border: 2px solid #111;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
-
-  <!-- Landing Page -->
   <section class="landing">
     <h1 class="title">Visual Manifest</h1>
     <div class="scroll-hint">Scroll to explore ↓</div>
   </section>
 
-  <!-- Scrollbereich mit animierten Projekten -->
-  <section id="scroll-area">
-    <div class="frames-container">
-      <div class="frame" style="z-index: 1;"><img src="images/frame1.jpg" alt="Project 1" /></div>
-      <div class="frame" style="z-index: 2;"><img src="images/frame2.jpg" alt="Project 2" /></div>
-      <div class="frame" style="z-index: 3;"><img src="images/frame3.jpg" alt="Project 3" /></div>
-      <div class="frame" style="z-index: 4;"><img src="images/frame4.jpg" alt="Project 4" /></div>
-      <a href="projekt1.html" class="frame" style="z-index: 5;"><img src="images/frame5.jpg" alt="Project 5" /></a>
+  <section class="scroll-container">
+    <div class="sticky-section">
+      <div class="frame-holder"><img src="images/frame1.jpg" alt="Frame 1" /></div>
+      <div class="frame-holder"><img src="images/frame2.jpg" alt="Frame 2" /></div>
+      <div class="frame-holder"><img src="images/frame3.jpg" alt="Frame 3" /></div>
+      <div class="frame-holder"><img src="images/frame4.jpg" alt="Frame 4" /></div>
     </div>
   </section>
 
-  <!-- GSAP + ScrollTrigger -->
-  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
-  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.utils.toArray('.frame').forEach((frame, i) => {
-      gsap.from(frame, {
+    const frames = gsap.utils.toArray(".frame-holder");
+
+    frames.forEach((frame, index) => {
+      gsap.to(frame, {
+        opacity: 1,
         scrollTrigger: {
-          trigger: frame,
-          start: 'top bottom',
-          end: '+=100',
+          trigger: ".scroll-container",
+          start: () => "top+=" + (window.innerHeight * index) + " top",
+          end: () => "top+=" + (window.innerHeight * (index + 1)) + " top",
           scrub: true
-        },
-        y: 100,
-        opacity: 0,
-        rotation: () => gsap.utils.random(-10, 10),
-        ease: "power2.out",
-        duration: 1
+        }
       });
     });
   </script>
-
 </body>
 </html>
