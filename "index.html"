@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Manifest</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: sans-serif;
+      background: #f8f8f8;
+      color: #111;
+      overflow-x: hidden;
+    }
+    .landing {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .title {
+      font-size: 3rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.875rem;
+      color: #666;
+      animation: bounce 1.5s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(10px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="landing">
+    <h1 class="title">Visual Manifest</h1>
+    <div class="scroll-hint">Scroll to explore ↓</div>
+  </section>
+
+  <section id="scroll-area">
+    <!-- Hier kommen später die Scroll-Animationen rein -->
+  </section>
+</body>
+</html>
