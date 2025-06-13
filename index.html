@@ -23,18 +23,28 @@
       position: fixed;
       width: 100%;
       height: 10vh;
-      background: #000;
-      z-index: 999;
-      left: 0;
-      opacity: 0;
+      background: black;
+      z-index: 99;
       pointer-events: none;
-    }
-
-    .black-bar.top {
-      top: 0;
+      transform: translateY(-100%);
     }
     .black-bar.bottom {
+      top: auto;
       bottom: 0;
+      transform: translateY(100%);
+    }
+
+    .cinema-title {
+      position: fixed;
+      top: 1.5vh;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      z-index: 100;
+      opacity: 0;
     }
 
     .landing {
@@ -44,17 +54,13 @@
       justify-content: center;
       align-items: center;
       position: relative;
-      z-index: 10;
     }
 
-    .title {
+    .landing-title {
       font-size: 3rem;
       font-weight: bold;
-      text-transform: uppercase;
       letter-spacing: 2px;
       transition: all 0.3s ease;
-      z-index: 200;
-      position: relative;
     }
 
     .scroll-hint {
@@ -74,38 +80,29 @@
       }
     }
 
-    .scroll-container {
+    .scroll-area {
       height: 200vh;
       background: #f8f8f8;
-      padding-top: 20vh;
-    }
-
-    .dummy-content {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #aaa;
-      font-size: 2rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Schwarze Balken (starten versteckt) -->
+  <!-- Schwarze Cinemabars -->
   <div class="black-bar top"></div>
   <div class="black-bar bottom"></div>
 
+  <!-- Kleiner Titel im Balken -->
+  <div class="cinema-title">Visual Manifest</div>
+
   <!-- Landing Page -->
   <section class="landing">
-    <h1 class="title">Visual Manifest</h1>
+    <h1 class="landing-title">Visual Manifest</h1>
     <div class="scroll-hint">Scroll to explore ↓</div>
   </section>
 
-  <!-- Scrollbereich -->
-  <section class="scroll-container">
-    <div class="dummy-content">Hier kommen später die Frames rein...</div>
-  </section>
+  <!-- Dummy Bereich für Scrollanimation -->
+  <section class="scroll-area"></section>
 
   <!-- GSAP -->
   <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
@@ -114,35 +111,53 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    const title = document.querySelector(".title");
-    const blackTop = document.querySelector(".black-bar.top");
-    const blackBottom = document.querySelector(".black-bar.bottom");
-
-    // Timeline für Balken + Titelverkleinerung
-    const tl = gsap.timeline({
+    // Schwarze Balken rein sliden
+    gsap.to(".black-bar.top", {
       scrollTrigger: {
-        trigger: ".scroll-container",
+        trigger: ".scroll-area",
         start: "top bottom",
         end: "top center",
         scrub: true,
-      }
+      },
+      y: "100%",
+      ease: "power2.out"
     });
 
-    tl.to([blackTop, blackBottom], {
+    gsap.to(".black-bar.bottom", {
+      scrollTrigger: {
+        trigger: ".scroll-area",
+        start: "top bottom",
+        end: "top center",
+        scrub: true,
+      },
+      y: "-100%",
+      ease: "power2.out"
+    });
+
+    // Landing Titel ausfaden
+    gsap.to(".landing-title", {
+      scrollTrigger: {
+        trigger: ".scroll-area",
+        start: "top bottom",
+        end: "top center",
+        scrub: true,
+      },
+      opacity: 0,
+      y: -100,
+      ease: "power2.out"
+    });
+
+    // Kleinen Titel im Balken einblenden
+    gsap.to(".cinema-title", {
+      scrollTrigger: {
+        trigger: ".scroll-area",
+        start: "top bottom",
+        end: "top center",
+        scrub: true,
+      },
       opacity: 1,
-      duration: 0.5,
       ease: "power2.out"
-    }, 0);
-
-    tl.to(title, {
-      scale: 0.5,
-      color: "#fff",
-      x: "-40vw",
-      y: "-35vh",
-      duration: 0.5,
-      ease: "power2.out"
-    }, 0);
+    });
   </script>
-
 </body>
 </html>
