@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Visual Manifest</title>
   <style>
     * {
@@ -19,32 +19,22 @@
       overflow-x: hidden;
     }
 
-    .black-bar {
+    .top-bar, .bottom-bar {
       position: fixed;
+      left: 0;
       width: 100%;
-      height: 10vh;
-      background: black;
-      z-index: 99;
+      height: 0;
+      background: #000;
+      z-index: 100;
       pointer-events: none;
-      transform: translateY(-100%);
-    }
-    .black-bar.bottom {
-      top: auto;
-      bottom: 0;
-      transform: translateY(100%);
     }
 
-    .cinema-title {
-      position: fixed;
-      top: 1.5vh;
-      left: 50%;
-      transform: translateX(-50%);
-      color: white;
-      font-size: 1.2rem;
-      font-weight: bold;
-      letter-spacing: 2px;
-      z-index: 100;
-      opacity: 0;
+    .top-bar {
+      top: 0;
+    }
+
+    .bottom-bar {
+      bottom: 0;
     }
 
     .landing {
@@ -54,13 +44,17 @@
       justify-content: center;
       align-items: center;
       position: relative;
+      z-index: 1;
     }
 
-    .landing-title {
+    .title {
       font-size: 3rem;
       font-weight: bold;
+      text-transform: uppercase;
       letter-spacing: 2px;
       transition: all 0.3s ease;
+      z-index: 200;
+      position: relative;
     }
 
     .scroll-hint {
@@ -80,82 +74,69 @@
       }
     }
 
-    .scroll-area {
+    .scroll-container {
       height: 200vh;
-      background: #f8f8f8;
+      background-color: #f8f8f8;
+      position: relative;
+      z-index: 0;
     }
   </style>
 </head>
 <body>
-
-  <!-- Schwarze Cinemabars -->
-  <div class="black-bar top"></div>
-  <div class="black-bar bottom"></div>
-
-  <!-- Kleiner Titel im Balken -->
-  <div class="cinema-title">Visual Manifest</div>
+  <!-- Cinemascope Bars -->
+  <div class="top-bar"></div>
+  <div class="bottom-bar"></div>
 
   <!-- Landing Page -->
   <section class="landing">
-    <h1 class="landing-title">Visual Manifest</h1>
+    <h1 class="title">Visual Manifest</h1>
     <div class="scroll-hint">Scroll to explore ↓</div>
   </section>
 
-  <!-- Dummy Bereich für Scrollanimation -->
-  <section class="scroll-area"></section>
+  <!-- Scroll Content -->
+  <section class="scroll-container">
+    <!-- Hier kommen später deine Frames -->
+  </section>
 
-  <!-- GSAP -->
+  <!-- GSAP + ScrollTrigger -->
   <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
 
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    // Schwarze Balken rein sliden
-    gsap.to(".black-bar.top", {
+    // 🎞️ Top & Bottom Balken einblenden
+    gsap.to(".top-bar", {
+      height: "6vh",
       scrollTrigger: {
-        trigger: ".scroll-area",
+        trigger: ".scroll-container",
         start: "top bottom",
         end: "top center",
-        scrub: true,
-      },
-      y: "100%",
-      ease: "power2.out"
+        scrub: true
+      }
     });
 
-    gsap.to(".black-bar.bottom", {
+    gsap.to(".bottom-bar", {
+      height: "6vh",
       scrollTrigger: {
-        trigger: ".scroll-area",
+        trigger: ".scroll-container",
         start: "top bottom",
         end: "top center",
-        scrub: true,
-      },
-      y: "-100%",
-      ease: "power2.out"
+        scrub: true
+      }
     });
 
-    // Landing Titel ausfaden
-    gsap.to(".landing-title", {
+    // ✨ Titel wird kleiner, weiß & wandert in den oberen Balken
+    gsap.to(".title", {
       scrollTrigger: {
-        trigger: ".scroll-area",
+        trigger: ".scroll-container",
         start: "top bottom",
         end: "top center",
-        scrub: true,
+        scrub: true
       },
-      opacity: 0,
-      y: -100,
-      ease: "power2.out"
-    });
-
-    // Kleinen Titel im Balken einblenden
-    gsap.to(".cinema-title", {
-      scrollTrigger: {
-        trigger: ".scroll-area",
-        start: "top bottom",
-        end: "top center",
-        scrub: true,
-      },
-      opacity: 1,
+      scale: 0.5,
+      y: "-40vh",
+      color: "#fff",
       ease: "power2.out"
     });
   </script>
